@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: stg_customers
+    columns:
+      - name: customer_id
+        description: unique identifier of a customer
+        tests:
+          - unique
+          - not_null
+  - name: stg_orders
+    columns:
+      - name: order_id
+        description: unique identifier of an order
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: unique identifier of a customer
+        tests:
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id    
+      - name: order_status
+        description: attribute a status to an order, that can change over time
+        tests:
+          - accepted_values:
+              values:
+                - created
+                - shipped
+                - approved
+                - canceled
+                - invoiced
+                - delivered
+                - processing
+                - unavailable     
+  - name: dim_customers
+    description: unique identifier of a customer
+    columns:
+      - name: customer_id
+        tests:
+          - unique 
+          - not_null
+      - name: email
+        tests:
+          - not_null
+      - name: city
+        tests:
+          - not_null
+      - name: country
+        tests:
+          - not_null
